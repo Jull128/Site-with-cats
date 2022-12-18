@@ -1,0 +1,129 @@
+.modal-wrapper {
+    top: 50%;
+    left: 50%;
+    width: 350px;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    z-index: 9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container h1 {
+    color: white;
+}
+
+body {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0.7)),
+        url(img/1614648691_7-p-foni-koshek-dlya-fotoshopa-9.jpg);
+    background-size: no-repeat;
+    background-position: center;
+}
+
+.custom-modal {
+    width: 350px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.dm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgb(0, 0, 0, 0.5);
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    z-index: 7;
+}
+
+.hidden {
+    display: none;
+}
+
+.custom-modal.btn-close {
+    position: relative;
+    left: calc(100% - 24px);
+    top: 0;
+    margin-bottom: 12px;
+}
+
+.cat_card {
+    flex-wrap: wrap;
+}
+
+.card {
+    text-align: center;
+    margin-bottom: 50px;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: scale(1.1);
+    transition: 2s;
+}
+
+.card img {
+    height: 300px;
+    object-fit: cover;
+}
+
+.card p {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 20px;
+}
+
+.rate img {
+    height: 10px;
+}
+
+.card__show {
+    position: absolute;
+    width: 600px;
+    height: 300px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 8;
+    background: white;
+    border-radius: 15px;
+}
+
+.img_card_show {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 40%;
+    object-fit: cover;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+
+.card-text {
+    transform: translate(15%, 0%);
+    text-align: left;
+}
+
+.btn-primary {
+    background-color: rgb(162, 162, 248) !important;
+    border-color: blueviolet;
+}
+
+.btn-close-dcrp {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.form-control {
+    width: 300px;
+}
