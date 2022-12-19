@@ -22,6 +22,12 @@ const setRate = function (n) {
     return rate;
 }
 
+let user = localStorage.getItem("catUser");
+if (!user) {
+    user = prompt("Представьтесь, пожалуйста")
+    localStorage.setItem("catUser", user);
+}
+
 const generationCatCard = (cat) => `<div data-card_id=${cat.id} class="card mx-2" style="width: 18rem;">
 <img src="${cat.image}" class="card-img-top" alt="${cat.name}">
 <div class="card-body">
@@ -45,11 +51,11 @@ const showModalCat = (
       <div class="card-body">
         <h3 class="card-title text-left mt-2">${cat.name}</h3>
         <p class="card-text text-left p-3 ">${cat.description}</p>
-        <button data-action-add class="btn btn-success btn-success-edit"">Edit</button>
+        <button data-action-add class="btn btn-success text-bottom btn-success-edit"">Edit</button>
       </div>
     </div>
     <div class="col-md-1 pt-3">
-    <button data-bs-dismis type="button" class="btn-close" aria-label="Close"></button>
+    <button data-bs-dismiss type="button" class="btn-close" aria-label="Close"></button>
     </div>
   </div>
 </div>`;
@@ -59,35 +65,35 @@ const updShowModalCat = (cat) => `
 <div data-modal-edit class="modal-wrapper">
 
 <div class="d-flex justify-content-center custom-modal">
-<form name="catsFormEdit">
-<div>
-<h3>Edit the cat</h3>
-<label for="name">Name</label>
-<input type="text" class="form-control mb-2" placeholder="Введите имя" name="name" id="name" value="${cat.name}" />
+    <form name="catsFormEdit">
+        <div>
+            <h3>Edit the cat</h3>
+            <label for="name">Name</label>
+            <input type="text" class="form-control mb-2" placeholder="Введите имя" name="name" id="name" value="${cat.name}" />
 
-<label for="id">Id</label>
-<input type="text" class="form-control mb-2" name="id" id="id" placeholder="Число" value="${cat.id}" />
+            <label for="id">Id</label>
+            <input type="text" class="form-control mb-2" name="id" id="id" placeholder="Число" value="${cat.id}" disabled />
 
-<label for="image">Url image</label>
-<input type="url" class="form-control mb-2" name="image" id="image" placeholder="https://" value="${cat.image}" />
+            <label for="image">Url image</label>
+            <input type="url" class="form-control mb-2" name="image" id="image" placeholder="https://" value="${cat.image}" />
 
-<label for="age">Age</label>
-<input type="number" class="form-control mb-2" name="age" id="age" value="${cat.age}" />
+            <label for="age">Age</label>
+            <input type="number" class="form-control mb-2" name="age" id="age" value="${cat.age}" />
 
-<label for="rate">Rate</label>
-<input type="number" min="0" max="10" class="form-control mb-2" name="rate" id="rate" value="${cat.rate}"/>
+            <label for="rate">Rate</label>
+            <input type="number" min="0" max="10" class="form-control mb-2" name="rate" id="rate" value="${cat.rate}"/>
 
-<div class="mb-3 form-check">
-<label for="favorite" class="form-check-label">Check me if your favorite</label>
-<input type="checkbox" class="form-check-input mb-2" name="favorite" id="favorite" />
-</div>
+            <div class="mb-3 form-check">
+            <label for="favorite" class="form-check-label">Check me if your favorite</label>
+            <input type="checkbox" class="form-check-input mb-2" name="favorite" id="favorite" />
+            </div>
 
-<label for="description">Description</label>
-<input type="text" class="form-control mb-2" name="description" id="description" value="${cat.description}"/>
-<button type="submit" class="btn btn-primary">Edit</button>
-</div>
+            <label for="description">Description</label>
+            <input type="text" class="form-control mb-2" name="description" id="description" value="${cat.description}"/>
+            <button data-btn_save type="submit" class="btn btn-primary">Save</button>
+        </div>
 
-</form>
+    </form>
 </div>
 </div>`;
 
@@ -109,36 +115,82 @@ $wrapper.addEventListener('click', (event) => {
                 $modal.insertAdjacentHTML('beforebegin', showModalCat(data));
                 edit = document.querySelector('[data-action-add]');
                 cardObj = data;
-            });
-            setTimeout(() => {
-                $currentCardShowTime = document.querySelector('[data-card_show]');
-            }, 100);
+                setTimeout(() => {
+                    $currentCardShowTime = document.querySelector('[data-card_show]');
+                }, 100);
 
-            $overlay.classList.remove('hidden');
+                const $closeModal = document.querySelector('[data-bs-dismiss]');
 
-            $overlay.addEventListener('click', () => {
-                $overlay.classList.add('hidden');
-                $currentCardShowTime.remove();
-            });
+                $overlay.classList.remove('hidden');
 
-
-
-            setTimeout(() => {
-                edit.addEventListener("click", () => {
-                    $modal.insertAdjacentHTML('beforebegin',
-                        updShowModalCat(cardObj)
-                    );
+                $closeModal.addEventListener('click', () => {
+                    $overlay.classList.add('hidden')
                     $currentCardShowTime.remove();
-                    $overlay.style.zIndex = 8;
                 });
-                $overlay.classList.remove("hidden");
-                $overlay.addEventListener("click", () => {
-                    $overlay.classList.add("hidden");
-                    let $modalEdit = document.querySelector('[data-modal-edit]');
-                    $modalEdit.remove();
+
+                $overlay.addEventListener('click', () => {
+                    $overlay.classList.add('hidden');
+                    $currentCardShowTime.remove();
                 });
-                console.log(cardObj);
-            }, 100);
+
+                setTimeout(() => {
+                    edit.addEventListener('click', () => {
+                        $modal.insertAdjacentHTML('beforebegin',
+                            updShowModalCat(cardObj)
+                        );
+                        $currentCardShowTime.remove();
+
+
+                        let $modalEdit = document.querySelector('[data-modal-edit]');
+
+                        const closeModalCard = () => {
+                            $overlay.classList.add('hidden');
+                            $currentCardShowTime.remove();
+                        };
+
+                        const closeModalEdit = () => {
+                            $modalEdit.remove();
+                            $overlay.addEventListener('click', closeModalCard);
+                        };
+
+                        document.forms.catsFormEdit.addEventListener('submit', (event) => {
+                            event.preventDefault();
+
+                            const data = Object.fromEntries(new FormData(event.target).entries());
+                            data.id = Number(cardObj.id);
+                            data.age = Number(data.age);
+                            data.rate = Number(data.rate);
+                            data.favorite = data.favorite === "on";
+                            cardObj = data;
+
+
+                            api.updCat(data, cardObj.id).then((res) => res.ok && closeModalEdit());
+                            $currentCardShowTime.remove();
+
+                            $currentCardShowTime = document.querySelector("[data-card_show]");
+                            edit = document.querySelector("[data-btn_save ]");
+
+                            edit.addEventListener('click', () => {
+                                $currentCardShowTime.remove();
+                            });
+                            $overlay.classList.add('hidden');
+                        });
+
+
+                    });
+
+                    // показывает измененные данные кота только после f5, why?
+
+                    $overlay.classList.remove('hidden');
+                    $overlay.addEventListener('click', () => {
+                        $overlay.classList.add('hidden');
+                        let $modalEdit = document.querySelector('[data-modal-edit]');
+                        $modalEdit.remove();
+                    });
+                }, 100);
+            });
+
+
 
             break;
     }
@@ -155,7 +207,8 @@ document.forms.catsForm.addEventListener('submit', (event) => {
     data.favorite = data.favorite === 'on';
     console.log(data);
 
-    api.addCat(data).then(res => res.ok && $modal.classList.add('hidden'))
+    api.addCat(data).then(res => res.ok && $modal.classList.add('hidden'), $overlay.classList.add('hidden'))
+    // показывает нового кота только после f5, why?
     //catch
 });
 
@@ -186,5 +239,3 @@ api.getCats()
             })
         }, 2000)
     });
-
-

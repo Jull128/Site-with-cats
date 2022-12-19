@@ -1,7 +1,7 @@
 class Api {
-    constructor(name) {
+    constructor(user) {
         this.url = "https://cats.petiteweb.dev/api/single/";
-        this.name = name;
+        this.name = user;
     }
     getCats() {
         return fetch(`${this.url}${this.name}/show`)

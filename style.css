@@ -127,3 +127,11 @@ body {
 .form-control {
     width: 300px;
 }
+
+.btn-success-edit {
+    position: absolute;
+    top: 80%;
+    left: 85%;
+    background-color: rgb(162, 162, 248) !important;
+    border-color: blueviolet;
+}
