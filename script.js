@@ -49,7 +49,7 @@ const showModalCat = (
       </div>
     </div>
     <div class="col-md-1 pt-3">
-    <button data-bs-dismis type="button" class="btn-close" aria-label="Close"></button>
+    <button data-bs-dismiss type="button" class="btn-close" aria-label="Close"></button>
     </div>
   </div>
 </div>`;
@@ -63,10 +63,10 @@ const updShowModalCat = (cat) => `
 <div>
 <h3>Edit the cat</h3>
 <label for="name">Name</label>
-<input type="text" class="form-control mb-2" placeholder="Введите имя" name="name" id="name" value="${cat.name}" />
+<input type="text" class="form-control mb-2" placeholder="Введите имя" name="name" id="Name" value="${cat.name}" />
 
 <label for="id">Id</label>
-<input type="text" class="form-control mb-2" name="id" id="id" placeholder="Число" value="${cat.id}" />
+<input type="text" class="form-control mb-2" name="id" id="id" placeholder="Число" value="${cat.id}" disabled />
 
 <label for="image">Url image</label>
 <input type="url" class="form-control mb-2" name="image" id="image" placeholder="https://" value="${cat.image}" />
@@ -84,7 +84,7 @@ const updShowModalCat = (cat) => `
 
 <label for="description">Description</label>
 <input type="text" class="form-control mb-2" name="description" id="description" value="${cat.description}"/>
-<button type="submit" class="btn btn-primary">Edit</button>
+<button data-btn_save type="submit" class="btn btn-primary">Save</button>
 </div>
 
 </form>
@@ -109,36 +109,51 @@ $wrapper.addEventListener('click', (event) => {
                 $modal.insertAdjacentHTML('beforebegin', showModalCat(data));
                 edit = document.querySelector('[data-action-add]');
                 cardObj = data;
-            });
-            setTimeout(() => {
+                 setTimeout(() => {
                 $currentCardShowTime = document.querySelector('[data-card_show]');
-            }, 100);
+                            }, 100);
+            
+                            const $closeModal = document.querySelector('[data-bs-dismiss]');
 
             $overlay.classList.remove('hidden');
+
+            $closeModal.addEventListener('click', () => {
+                $overlay.classList.add('hidden')
+                $currentCardShowTime.remove();
+            });
 
             $overlay.addEventListener('click', () => {
                 $overlay.classList.add('hidden');
                 $currentCardShowTime.remove();
             });
 
-
-
             setTimeout(() => {
-                edit.addEventListener("click", () => {
+                edit.addEventListener('click', () => {
                     $modal.insertAdjacentHTML('beforebegin',
                         updShowModalCat(cardObj)
                     );
                     $currentCardShowTime.remove();
-                    $overlay.style.zIndex = 8;
+                    const $updCard = document.querySelector('[data-btn_save]');
+                    console.log($updCard)
+                    $updCard.addEventListener('click', () => {
+                    
+                        
+
+                        api.updCat(catId);
+                    })
                 });
-                $overlay.classList.remove("hidden");
-                $overlay.addEventListener("click", () => {
-                    $overlay.classList.add("hidden");
+
+
+                $overlay.classList.remove('hidden');
+                $overlay.addEventListener('click', () => {
+                    $overlay.classList.add('hidden');
                     let $modalEdit = document.querySelector('[data-modal-edit]');
                     $modalEdit.remove();
                 });
-                console.log(cardObj);
             }, 100);
+            });
+            
+           
 
             break;
     }
@@ -186,5 +201,3 @@ api.getCats()
             })
         }, 2000)
     });
-
-
